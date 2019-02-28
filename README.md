@@ -187,7 +187,7 @@ Task grabs containers. Now service picks up the task and puts it into a cluster 
 - [A beginner’s guide to Amazon’s Elastic Container Service](https://medium.freecodecamp.org/amazon-ecs-terms-and-architecture-807d8c4960fd): terms like cluster, service, tasks, and good paradigm pictures!
 
 - Terraform - use it to automate settings on AWS ECS.
-- [Self ref link to this repo](https://github.com/rivernews/blue-bucks-diner-backend)
+- [Self ref link to this repo](https://github.com/rivernews/bb-rest-api)
 - About PORT
     - [You cannot listen to port 80](https://stackoverflow.com/questions/18947356/node-js-app-cant-run-on-port-80-even-though-theres-no-other-process-blocking-t), so node.js has to listen to 3000.
 - [Too `ssh` into the container instance](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/instance-connect.html), follow the article.
