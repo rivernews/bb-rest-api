@@ -1,0 +1,30 @@
+{
+    "name": "blue-bucks-diner-backend",
+    "version": "1.0.0",
+    "description": "The backend for Blue Bucks Diner mobile app.",
+    "main": "./src/server.js",
+    "scripts": {
+        "start": "nodemon ./src/server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rivernews/blue-bucks-diner-backend.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/rivernews/blue-bucks-diner-backend/issues"
+    },
+    "homepage": "https://github.com/rivernews/blue-bucks-diner-backend#readme",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "dotenv": "^6.2.0",
+        "express": "^4.16.4",
+        "mongoose": "^5.4.9"
+    },
+    "devDependencies": {
+        "nodemon": "^1.18.9"
+    }
+}

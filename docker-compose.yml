@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  nginx:
+    build: ./nginx
+    image: '$AWS_ECR_URL/$PROJECT_NAME/nginx:$IMAGE_TAG'
+    volumes:
+      - global_static:/usr/src/global_static
+    ports:
+      - "80:80"
+      - 443:443
+    depends_on:
+      - web
+  web:
+    build: ./nodejs # where Dockerfile is
+    image: '$AWS_ECR_URL/$PROJECT_NAME/nodejs:$IMAGE_TAG'
+    # restart: unless-stopped
+    # networks:
+    #   - app-network
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - NODE_ENV=${NODE_ENV}
+
+volumes:
+  global_static:

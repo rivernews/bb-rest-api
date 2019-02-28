@@ -1,0 +1,65 @@
+version: 1
+task_definition:
+  ecs_network_mode: bridge
+  task_role_arn: arn:aws:iam::368061806057:role/ecsTaskExecutionRoleForEcsCli
+  task_execution_role: ecsTaskExecutionRoleForEcsCli
+  task_size:
+    cpu_limit: 256
+    mem_limit: 256
+  # pid_mode: string
+  # ipc_mode: string
+  services:
+    web:
+      # essential: boolean
+      # repository_credentials:
+      #   credentials_parameter: string
+      cpu_shares: 64
+      # mem_limit: 500
+      mem_reservation: 64m
+      healthcheck:
+        test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+        interval: 10 # sec
+        timeout: 5
+        retries: 2
+      #   start_period: string
+      secrets:
+        - value_from: arn:aws:ssm:us-east-2:368061806057:parameter/bb-diner/MONGODB_URI
+          name: MONGODB_URI
+        - value_from: arn:aws:ssm:us-east-2:368061806057:parameter/bb-diner/NODE_ENV
+          name: NODE_ENV
+run_params:
+  network_configuration:
+    awsvpc_configuration:
+#       subnets: 
+#         - subnet_id1 
+#         - subnet_id2
+#       security_groups: 
+#         - secgroup_id1
+#         - secgroup_id2
+      assign_public_ip: ENABLED
+#   task_placement:
+#     strategy:
+#       - type: string
+#         field: string
+#     constraints:
+#       - type: string
+#          expression: string
+#   service_discovery:
+#     container_name: string
+#     container_port: integer
+#     private_dns_namespace:
+#         vpc: string
+#         id: string
+#         name: string
+#         description: string
+#     public_dns_namespace:
+#         id: string
+#         name: string
+#     service_discovery_service:
+#         name: string
+#         description: string
+#         dns_config:
+#           type: string
+#           ttl: integer
+#         healthcheck_custom_config:
+#           failure_threshold: integer
