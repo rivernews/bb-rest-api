@@ -109,6 +109,10 @@ resource "aws_alb_target_group" "http" {
       healthy_threshold = 2
       unhealthy_threshold = 3
   }
+
+  lifecycle {
+      create_before_destroy = true # avoid error: target is currently in use by a listener or a rule, see https://github.com/terraform-providers/terraform-provider-aws/issues/1315
+  }
 }
 
 # https://www.terraform.io/docs/providers/aws/r/lb_target_group.html#health_check
