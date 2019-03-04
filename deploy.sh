@@ -15,6 +15,7 @@ docker-compose up -d --build --remove-orphans && \
 docker-compose push && \
 cd terraform && \
 terraform apply && \
-cd .. && return
+cd .. && \
+echo "SUCCESS! Allow several minutes for change to take effect on production server. Take some rest and have a cup of coffee! Then go to the url and check it out." && return
 
 echo ERROR: see bove message.

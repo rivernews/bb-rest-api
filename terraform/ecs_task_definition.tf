@@ -1,8 +1,9 @@
 data "aws_ecr_repository" "nodejs" {
   name = "bb-diner/nodejs"
-#   name = "${aws_ecr_repository.service.name}"
-#   depends_on      = ["aws_ecr_repository.service"]
-  
+
+  #   name = "${aws_ecr_repository.service.name}"
+  #   depends_on      = ["aws_ecr_repository.service"]
+
   # other available vars exposed: (https://www.terraform.io/docs/providers/aws/r/ecr_repository.html)
   # arn
   # registry_id
@@ -14,7 +15,6 @@ data "aws_ecr_repository" "nginx" {
   name = "bb-diner/nginx"
 }
 
-
 data "aws_ecs_task_definition" "test" {
   task_definition = "${aws_ecs_task_definition.test.family}"
   depends_on      = ["aws_ecs_task_definition.test"]
@@ -22,7 +22,7 @@ data "aws_ecs_task_definition" "test" {
 
 resource "aws_ecs_task_definition" "test" {
   family                   = "${var.project_name}-family"
-  network_mode             = "bridge"                     # The valid values are none, bridge, awsvpc, and host. The default Docker network mode is bridge.
+  network_mode             = "bridge"                                                       # The valid values are none, bridge, awsvpc, and host. The default Docker network mode is bridge.
   requires_compatibilities = ["EC2"]
   execution_role_arn       = "arn:aws:iam::368061806057:role/ecsTaskExecutionRoleForEcsCli" # required if container secret
 
@@ -112,17 +112,27 @@ JSON
   # aws key management servoce: https://us-east-2.console.aws.amazon.com/kms/home?region=us-east-2#/kms/home
 
   depends_on = [
-      "data.aws_ecr_repository.nginx", 
-      "data.aws_ecr_repository.nodejs",
-    ]
+    "data.aws_ecr_repository.nginx",
+    "data.aws_ecr_repository.nodejs",
+    "null_resource.task_def_dependency",
+  ]
   #   volume {
   #     name      = "service-storage"
   #     host_path = "/ecs/service-storage"
   #   }
   placement_constraints {
-    type       = "memberOf"
+    type = "memberOf"
+
     # expression = "attribute:ecs.availability-zone in [us-east-2a]" # free tier
 
     expression = "attribute:ecs.availability-zone in [us-east-2a, us-east-2b]"
   }
 }
+
+resource "null_resource" "task_def_dependency" {
+  triggers {
+      task_container_name_nodejs = "${var.task_container_name_nodejs}"
+      task_container_name_nginx = "${var.task_container_name_nginx}"
+  }
+}
+
