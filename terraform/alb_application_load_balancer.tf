@@ -92,7 +92,7 @@ resource "aws_alb_listener" "https" {
 # https://www.terraform.io/docs/providers/aws/r/lb_target_group.html#health_check
 resource "aws_alb_target_group" "http" {
   name     = "${var.project_name}-alb-tg-http"
-  # port     = 80 # should be same as alb's listener (443) OR container's port (80)??
+  port     = 80 # should be same as alb's listener (443) OR container's port (80)??
   # protocol = "HTTP"
 
   #   vpc_id   = "${module.new-vpc.vpc_id}"
