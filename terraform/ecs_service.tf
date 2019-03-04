@@ -5,6 +5,10 @@ resource "aws_ecs_service" "test-ecs-service" {
   desired_count   = 1
   iam_role        = "${aws_iam_role.ecs-service-role.name}"
 
+  # will cause a short service downtime, but can make sure not running out of EC2 recources.
+  deployment_minimum_healthy_percent = 0 # default is 100
+  deployment_maximum_percent = 100 # default is 200
+
   load_balancer {
     target_group_arn = "${aws_alb_target_group.http.id}"
     container_name   = "${var.task_container_name_nginx}"

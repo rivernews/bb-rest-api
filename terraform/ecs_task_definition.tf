@@ -22,7 +22,7 @@ data "aws_ecs_task_definition" "test" {
 
 resource "aws_ecs_task_definition" "test" {
   family                   = "${var.project_name}-family"
-  network_mode             = "bridge"                                                       # The valid values are none, bridge, awsvpc, and host. The default Docker network mode is bridge.
+  network_mode             = "bridge" # The valid values are none, bridge, awsvpc, and host. The default Docker network mode is bridge.
   requires_compatibilities = ["EC2"]
   execution_role_arn       = "arn:aws:iam::368061806057:role/ecsTaskExecutionRoleForEcsCli" # required if container secret
 
@@ -45,7 +45,7 @@ resource "aws_ecs_task_definition" "test" {
       },
       "portMappings": [
         {
-          "hostPort": 80,
+          "hostPort": 0,
           "protocol": "tcp",
           "containerPort": 80
         }
