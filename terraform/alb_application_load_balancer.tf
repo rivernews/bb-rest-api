@@ -9,6 +9,7 @@ resource "aws_alb" "main" {
   # security_groups = ["${module.new-vpc.default_security_group_id}"]
 }
 
+
 # https://www.terraform.io/docs/providers/aws/r/security_group.html
 resource "aws_security_group" "public_alb" {
   name        = "${var.project_name}_public_alb"
@@ -17,7 +18,7 @@ resource "aws_security_group" "public_alb" {
 
   # for allowing health check traffic
   ingress {
-    from_port = 32768
+    from_port = 32768 # ephemeral port range: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
     # to_port     = 61000
     to_port     = 65535
     protocol    = "tcp"
@@ -74,28 +75,6 @@ resource "aws_security_group" "public_alb" {
 #   }
 # }
 
-# https://www.terraform.io/docs/providers/aws/r/lb_target_group.html#health_check
-resource "aws_alb_target_group" "http" {
-  name     = "${var.project_name}-alb-tg-http"
-  port     = 80
-  protocol = "HTTP"
-
-  #   vpc_id   = "${module.new-vpc.vpc_id}"
-  vpc_id = "${var.vpc_id}"
-
-  health_check {
-      path = "/"
-      matcher = "200-299"
-      port = 80 # or "traffic-port" (default)
-      protocol = "HTTP" # default
-
-      interval = 20
-      timeout = 10
-      healthy_threshold = 2
-      unhealthy_threshold = 3
-  }
-}
-
 resource "aws_alb_listener" "https" {
   load_balancer_arn = "${aws_alb.main.id}"
   port              = "443"
@@ -107,6 +86,28 @@ resource "aws_alb_listener" "https" {
     # target_group_arn = "${aws_alb_target_group.https.id}"
     target_group_arn = "${aws_alb_target_group.http.id}"
     type             = "forward"
+  }
+}
+
+# https://www.terraform.io/docs/providers/aws/r/lb_target_group.html#health_check
+resource "aws_alb_target_group" "http" {
+  name     = "${var.project_name}-alb-tg-http"
+  # port     = 80 # should be same as alb's listener (443) OR container's port (80)??
+  # protocol = "HTTP"
+
+  #   vpc_id   = "${module.new-vpc.vpc_id}"
+  vpc_id = "${var.vpc_id}"
+
+  health_check {
+      path = "/"
+      matcher = "200-299"
+      port = "traffic-port" # port number or "traffic-port" (default), required for dynamic host port for container: https://aws.amazon.com/premiumsupport/knowledge-center/dynamic-port-mapping-ecs/
+      # protocol = "HTTP" # default
+
+      interval = 20
+      timeout = 10
+      healthy_threshold = 2
+      unhealthy_threshold = 3
   }
 }
 
