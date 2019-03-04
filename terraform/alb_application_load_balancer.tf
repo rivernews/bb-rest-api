@@ -92,8 +92,8 @@ resource "aws_alb_listener" "https" {
 # https://www.terraform.io/docs/providers/aws/r/lb_target_group.html#health_check
 resource "aws_alb_target_group" "http" {
   name     = "${var.project_name}-alb-tg-http"
-  port     = 80 # should be same as alb's listener (443) OR container's port (80)??
-  protocol = "HTTP"
+  # port     = 80 # should be same as alb's listener (443) OR container's port (80)??
+  # protocol = "HTTP"
 
   #   vpc_id   = "${module.new-vpc.vpc_id}"
   vpc_id = "${var.vpc_id}"
@@ -102,7 +102,7 @@ resource "aws_alb_target_group" "http" {
       path = "/"
       matcher = "200-299"
       port = "traffic-port" # port number or "traffic-port" (default), required for dynamic host port for container: https://aws.amazon.com/premiumsupport/knowledge-center/dynamic-port-mapping-ecs/
-      protocol = "HTTP" # default
+      # protocol = "HTTP" # default
 
       interval = 20
       timeout = 10
