@@ -62,7 +62,7 @@ resource "aws_ecs_task_definition" "test" {
         "retries": 3,
         "command": [
           "CMD-SHELL",
-          "exit 0"
+          "exit 0 || exit 0"
         ],
         "timeout": 5,
         "interval": 10,
