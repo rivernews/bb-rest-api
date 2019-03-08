@@ -92,8 +92,8 @@ resource "aws_alb_listener" "https" {
 # https://www.terraform.io/docs/providers/aws/r/lb_target_group.html#health_check
 resource "aws_alb_target_group" "http" {
   name     = "${var.project_name}-alb-tg-http"
-  port     = 80 # should be same as alb's listener (443) OR container's port (80)??
-  # protocol = "HTTP"
+  port     = 80 # required, otherwise will fail, but should be same as alb's listener (443) OR container's port (80)??
+  protocol = "HTTP" # required, otherwise will fail
 
   #   vpc_id   = "${module.new-vpc.vpc_id}"
   vpc_id = "${var.vpc_id}"
@@ -110,9 +110,6 @@ resource "aws_alb_target_group" "http" {
       unhealthy_threshold = 3
   }
 
-  lifecycle {
-      create_before_destroy = true # avoid error: target is currently in use by a listener or a rule, see https://github.com/terraform-providers/terraform-provider-aws/issues/1315
-  }
 }
 
 # https://www.terraform.io/docs/providers/aws/r/lb_target_group.html#health_check

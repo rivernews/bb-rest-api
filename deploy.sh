@@ -11,6 +11,7 @@ fi
 
 . ./venv/bin/activate && \
 $(aws ecr get-login --no-include-email --region us-east-2) && \
+docker container stop $(docker container ls -aq) && \
 docker-compose up -d --build --remove-orphans && \
 docker-compose push && \
 cd terraform && \

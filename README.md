@@ -5,6 +5,52 @@ Mainly following [this post](https://itnext.io/building-restful-web-apis-with-no
 
 Goal: Node.js + MongoDB for RESTful as an universal backend.
 
+## NoSQL Schema Design
+
+```js
+/* Collection - DiningHall */
+{
+    objectID,
+    name,
+    sessions: [
+        SessionObject(),
+        SessionObject()
+        // ...
+    ],
+}
+
+/* Collection - Session */
+{
+    objectID,
+    mealType: "Breakfast | Lunch | Light Lunch | Dinner | Late Night | Breakfast and Lunch | ...",
+    date: "March 11 2019",
+    startTime: "7:00 am | 10:30 am | 8:00 pm | ...",
+    endTime: "10:30 am | 10:00 pm | ..."
+    menu: Menu()
+}
+
+/* Collection - Menu */
+{
+    session: Session(),
+}
+
+/* Collection - Dish */
+{
+    objectID,
+    name,
+    image
+}
+
+/* Collection - Image */
+{
+    name
+}
+```
+
+### How to design NoSQL: transit from relational to non-relational
+
+
+
 ## Global & 3rd Party Tools Setup
 
 - ~~`npm install -g typescript ts-node`~~
@@ -104,13 +150,11 @@ docker push 368061806057.dkr.ecr.us-east-1.amazonaws.com/bb-rest-api:latest
     - Give a task definition name. (We use `bb-task`)
     - Add a container. A form will show up to fill in
         - Container name - use our image title name `bb-rest-api`
-        - Image - fill in the image url, in our case, `368061806057.dkr.ecr.us-east-1.amazonaws.com/bb-rest-api`
         - "Private repository authentication": [not appliable](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html) if using ECR as the repo with ECS.
         - Add a memory soft limit as 512. (Following [the tutorial](https://medium.freecodecamp.org/how-to-deploy-a-node-js-application-to-amazon-web-services-using-docker-81c2a2d7225b)). "Soft limit: ECS reserves that amount of memory for your container."
         - Port mapping: map host 80 to containter 3000. TCP is fine.
         - Go to "ENVIRONMENT" section, scroll down to locate `Environment variables` subsection.
             - NODE_ENV: production
-            - MONGODB_URI: `your db connection url w/ credentials`
         - Submit the form to add container.
     - Press "Create" to submit the task definition form.
 
@@ -156,7 +200,6 @@ Task grabs containers. Now service picks up the task and puts it into a cluster 
 
 # Summarizing CI/CD
 
-- Setup ECR repo (one-time action), get the ECR url and put that in `.env`. **Remember, just the base url, not the repo name included, exclude the repo name.**
 - (we will eventually push docker image to ECR by AWS CodeBuild in CodePipeline) we now build and push our docker image for setup purpose.
     - `docker-compose build`, test by `docker-compose up -d` and upload to ECR by `docker-compose push`. You might want to do `$(aws ecr get-login --no-include-email --region us-east-2)` first.
 - Create the task definition - container - service series of resources in ECS. This is a one-time action. We will need `ecs-cli`, `docker-compose-ecs.yml`, `Dockerfile`, and most important, `ecs-params.yml`. **You probably want a separate `docker-compose-ecs.yml` for ECS**, because they use different method from local dev to pass in secrets and env variables.
@@ -168,7 +211,6 @@ Task grabs containers. Now service picks up the task and puts it into a cluster 
 
 - Next time:
     - We now setup a CI/CD, but, we can't access the server cuz of routing.
-        - only one public IP per constainer instance. If you want to rely on ALB, you have to use suffix url, which, can't be done by simply adding a record to Route 53.
         - To maximize route53 use, you can only create another container instance, which means, you have to create another cluster. 
         - configure `ecs-cli configure --cluster BBDinerCluster --region us-east-2 --default-launch-type EC2 --config-name BBDinerConfig`
         - create cluster `ecs-cli up --debug --keypair shaungc-ecs --capability-iam --launch-type EC2 --size 1 --instance-type t2.micro --azs us-east-2a,us-east-2b --image-id ami-04b61a4d3b11cc8ea --force --cluster-config BBDinerConfig --cluster BBDinerCluster`
