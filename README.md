@@ -32,23 +32,46 @@ Goal: Node.js + MongoDB for RESTful as an universal backend.
 /* Collection - Menu */
 {
     session: Session(),
+    stores: [
+        Store(),
+        Store(),
+        // ...
+    ]
+}
+
+/* Collection - Store */
+{
+    name,
+    dishes: [
+        Dish(),
+        Dish(),
+        // ...
+    ]
 }
 
 /* Collection - Dish */
 {
     objectID,
     name,
-    image
+    images [
+        Image(),
+        Image(),
+        // ...
+    ]
 }
 
 /* Collection - Image */
 {
+    url,
     name
 }
 ```
 
 ### How to design NoSQL: transit from relational to non-relational
 
+- 🔥 🔥 🔥 [Read the Official Guide: 6 Rules of Thumb for MongoDB Schema Design: Part 1](https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1).
+- Design the schema, make sure it's feasible, then apply it in mongoose schema.
+    - If you're unsure a specific structure will work or not, try to create a basic set of schemas, and then play with it as you build REST API.
 
 
 ## Global & 3rd Party Tools Setup
