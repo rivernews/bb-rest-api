@@ -69,9 +69,19 @@ Goal: Node.js + MongoDB for RESTful as an universal backend.
 
 ### How to design NoSQL: transit from relational to non-relational
 
-- 🔥 🔥 🔥 [Read the Official Guide: 6 Rules of Thumb for MongoDB Schema Design: Part 1](https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1).
+- [Read the Official Guide: 6 Rules of Thumb for MongoDB Schema Design: Part 1](https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1). Things to consider:
+    - "One to N": how large is N? A few, many (sure to `<` certain number like 1K), or infinite?
+        - If only a few, bounded, then just embed it. *But should we don't care about class object in frontend?*
+        - If many, then use referencing.
+    - How often do you need to update a certain part of data?
+        - If very often to udpate, perhaps better use referencing, e.g., `anAttribute: [ objectID('...'), ...]`
+        - [**Embedding vs linking**](https://stackoverflow.com/questions/43281172/mongodb-architecture-best-practices-for-storing-child-relationships).
+            - [Linking](https://mongoosejs.com/docs/populate.html#dynamic-ref): ref to it, then populate them. (*How about nested linking? [Someone asnwered on SO!](https://stackoverflow.com/questions/36996384/how-to-populate-nested-entities-in-mongoose)*)
+        - Use case: after web scrapping, incoming new Session data. You want the most recent 1 week data from a certain dining hall. You may keep adding DiningHall.sessions as time goes on, but the .sessions contains a lot of "log" session - only for archive purpose, not using it anywhere. And it will get bulky.
+        - 🔥 🔥 🔥 Keep reading on the [official recommendation](https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1), seems like it's still valid, even it's written in 2014.
 - Design the schema, make sure it's feasible, then apply it in mongoose schema.
     - If you're unsure a specific structure will work or not, try to create a basic set of schemas, and then play with it as you build REST API.
+
 
 
 ## Global & 3rd Party Tools Setup
