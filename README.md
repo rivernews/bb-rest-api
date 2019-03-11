@@ -286,3 +286,7 @@ Task grabs containers. Now service picks up the task and puts it into a cluster 
 - [`docker-compose-ecs.yml`](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-compose-parameters.html) file spec.
 - [`ecs-params.yml`](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cmd-ecs-cli-compose-ecsparams.html) file spec.
 - [`docker-compose.yml`](https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu-and-other-resources) file spec.
+
+- Private
+    - [Dev Diary](https://docs.google.com/document/d/1Kn3y0VE8TBnCUY60LME8ENRvLOWT7yMFDSIl6P5Ugt0/edit#)
+    - [Project Scoping](https://docs.google.com/document/d/1eUEkVQnJ29gvFKI2z_rtEFTjo49Smwfp_TiVaRGwMdo/edit#heading=h.ubldywjs0fof)
