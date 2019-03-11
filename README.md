@@ -1,9 +1,9 @@
 # blue-bucks-diner-backend
-The backend for Blue Bucks Diner mobile app.
+The backend for Blue Bucks Diner mobile app. See the main documentation in [front end repository](https://github.com/rivernews/BlueBucksDinerReactNative).
 
-Mainly following [this post](https://itnext.io/building-restful-web-apis-with-node-js-express-mongodb-and-typescript-part-1-2-195bdaf129cf).
+You might find it helpful to refer to this project as an working example of building an REST API based on the tech stack stated below. To fully run this project on your machine, however, requires manual configuration after you do `git clone`. Most of these configuration are credential data, whichi is excluded in this repo and you have to generate them on your side. Also, you have to have a AWS account. Feel free to contact me by filling a form on my [personal website](https://shaungc.com) for any details you want to know.
 
-Goal: Node.js + MongoDB for RESTful as an universal backend.
+Goal: Node.js + MongoDB for RESTful as an universal backend. For setting up node.js as REST API, we mainly followed [this post](https://itnext.io/building-restful-web-apis-with-node-js-express-mongodb-and-typescript-part-1-2-195bdaf129cf).
 
 ## NoSQL Schema Design
 
@@ -12,28 +12,33 @@ Goal: Node.js + MongoDB for RESTful as an universal backend.
 {
     objectID,
     name,
-    sessions: [
+    sessions: [ /* child referencing */
         SessionObject(),
         SessionObject()
         // ...
     ],
+    menus: [ /* child referencing */
+        Menu(),
+        Menu()
+        // ...
+    ]
 }
 
 /* Collection - Session */
 {
-    objectID,
+    objectID, /* parent referencing */
     mealType: "Breakfast | Lunch | Light Lunch | Dinner | Late Night | Breakfast and Lunch | ...",
     date: "March 11 2019",
     startTime: "7:00 am | 10:30 am | 8:00 pm | ...",
     endTime: "10:30 am | 10:00 pm | ..."
-    menu: Menu()
 }
 
 /* Collection - Menu */
 {
-    session: Session(),
+    mealType: "Breakfast | Lunch | Dinner | ...",
+    date: "March 11 2019",
     stores: [
-        Store(),
+        Store(), /* nested child referencing */
         Store(),
         // ...
     ]
@@ -79,6 +84,16 @@ Goal: Node.js + MongoDB for RESTful as an universal backend.
             - [Linking](https://mongoosejs.com/docs/populate.html#dynamic-ref): ref to it, then populate them. (*How about nested linking? [Someone asnwered on SO!](https://stackoverflow.com/questions/36996384/how-to-populate-nested-entities-in-mongoose)*)
         - Use case: after web scrapping, incoming new Session data. You want the most recent 1 week data from a certain dining hall. You may keep adding DiningHall.sessions as time goes on, but the .sessions contains a lot of "log" session - only for archive purpose, not using it anywhere. And it will get bulky.
         - 🔥 🔥 🔥 Keep reading on the [official recommendation](https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1), seems like it's still valid, even it's written in 2014.
+
+### Use Case Observation
+
+- The web scrapping nature: unpredictable, relies on the M|Dining website, grab as many data as we can, but nothing guranteed.
+- Hard to reuse anything, even "state".
+    - Reusing `mealType`: but nothing reusable other than the name. The menu & session start/end time still change and are not fixed.
+    - Reusing `Dish`: when same dish come out, are they necessarily the same? If so, we can reuse dish. Otherwise, we have to re-create every time.
+
+### Approach & Action
+
 - 🔜 Work on the models in `nodejs/src/models/*` Design the schema, make sure it's feasible, then apply it in mongoose schema.
     - If you're unsure a specific structure will work or not, try to create a basic set of schemas, and then play with it as you build REST API.
 
