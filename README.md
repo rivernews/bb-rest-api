@@ -3,7 +3,9 @@ The backend for Blue Bucks Diner mobile app. See the main documentation in [fron
 
 You might find it helpful to refer to this project as an working example of building an REST API based on the tech stack stated below. To fully run this project on your machine, however, requires manual configuration after you do `git clone`. Most of these configuration are credential data, whichi is excluded in this repo and you have to generate them on your side. Also, you have to have a AWS account. Feel free to contact me by filling a form on my [personal website](https://shaungc.com) for any details you want to know.
 
-Goal: Node.js + MongoDB for RESTful as an universal backend. For setting up node.js as REST API, we mainly followed [this post](https://itnext.io/building-restful-web-apis-with-node-js-express-mongodb-and-typescript-part-1-2-195bdaf129cf).
+Goal: Node.js + MongoDB for RESTful API + Nginx + Docker
+
+For setting up node.js as REST API, we mainly followed [this post](https://itnext.io/building-restful-web-apis-with-node-js-express-mongodb-and-typescript-part-1-2-195bdaf129cf).
 
 ## NoSQL Schema Design
 
